@@ -18,10 +18,14 @@ use App\Models\Recette;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/recettes', function(Request $request){
+Route::get('/recettes', function(){
     $recettes = Recette::select("id","titre","ingredients", "photo", "duree")->get();
     return response()->json($recettes);
 });
+Route::get('/recettes?search={ingredient}', function ($ingredient) {
+    $recettes = Recette::select("id","titre","ingredients", "photo", "duree")->where('ingredients=', $ingredient)->get();
+    return response()->json($recettes);
+   });
 Route::delete('/recettes/{id}', function ($id) {
     $recette = Recette::find($id);
     $ok=$recette->delete();
